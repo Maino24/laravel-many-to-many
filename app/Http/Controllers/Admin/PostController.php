@@ -115,6 +115,14 @@ class PostController extends Controller
 
         $singolopost->update($data);
 
+        //controlla se l'utente ha cliccato o erano già selezionate delle checkbox
+        if(array_key_exists('tags', $data)){
+            $singolopost->tags->sync($data['tags']);
+        }else{
+            //non ci sono checkbox selezionate
+            $singolopost->tags()->sync([]);
+        }
+
         return redirect()->route('admin.posts.show', $singolopost->id);
     }
 
