@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Category;
 use App\Http\Controllers\Controller;
+use App\Mail\CreatePostMail;
 use App\Post;
 use App\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
@@ -128,6 +131,11 @@ class PostController extends Controller
             //non ci sono checkbox selezionate
             $singolopost->tags()->sync([]);
         }
+
+        //invio mail di creazione
+        $mail = new CreatePostMail();
+        $email_utente = Auth::user()->email;//recupera email dell'utente che è loggato
+        Mail::to($email_utente)->send($mail);
 
         return redirect()->route('admin.posts.show', $singolopost->id);
     }
