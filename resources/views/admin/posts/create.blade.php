@@ -3,8 +3,9 @@
     <div class="container text-center">
         <h1>Crea nuovo post</h1>
 
-        <form action="{{route('admin.posts.store')}}" method="POST">
+        <form action="{{route('admin.posts.store')}}" method="POST" enctype="multipart/form-data">
             @csrf
+
                 <div class="my-4">
                     <label class="form-lable" for="">Titolo</label>
                     <input class="form-control" type="text" name="title">
@@ -48,6 +49,11 @@
 
                 </div>
 
+                {{-- aggiunta immagini --}}
+                <div class="my-4">
+                    <label for="">Aggiunta cover image</label>
+                    <input type="file" name="image" class="form-control-file">
+                </div>
 
                 <button class="btn btn-primary">Crea</button>
 

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Post;
 use App\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -60,6 +61,11 @@ class PostController extends Controller
         ]);
 
         $newPost = new Post();
+        //controllo se l'immagine è stata caricata nell'input
+        if( array_key_exists('image', $data)){
+            $cover_url = Storage::put('post_covers', $data['image']);
+            $data['cover'] = $cover_url;
+        }
         $newPost->fill($data);
         $newPost->save();
 
@@ -135,6 +141,12 @@ class PostController extends Controller
     public function destroy($id)
     {
         $singolo_post = Post::findOrFail($id);
+
+        //se calncello un post con questo comando si cancella anche l'immagine dentro la cartella storage
+        if($singolo_post->cover){
+            Storage::delete($singolo_post->cover);
+        }
+
         $singolo_post ->tags()->sync([]);
         $singolo_post->delete();
 
